@@ -64,6 +64,7 @@ model Zaprun{
   id        String   @id @default(uuid())
   zapId     String
   zap       Zap      @relation(fields: [zapId], references: [id])
+  metadata  Json
   outbox    ZaprunOutbox[]
 }
 
