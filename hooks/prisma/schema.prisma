@@ -29,6 +29,7 @@ model Zap{
   actions   Action[]
   userId    String
   user      User     @relation(fields: [userId], references: [id])
+  zapruns   Zaprun[]
 }
 
 model Trigger {
@@ -38,6 +39,7 @@ model Trigger {
   type      AvailableTriggers @relation(fields: [triggerId], references: [id])
   zap       Zap              @relation(fields: [zapId], references: [id])
 }
+
 model Action{
   id        String   @id @default(uuid())
   zapId     String
@@ -56,5 +58,18 @@ model AvailableTriggers{
   id        String   @id @default(uuid())
   name      String
   triggers Trigger[]
+}
+
+model Zaprun{
+  id        String   @id @default(uuid())
+  zapId     String
+  zap       Zap      @relation(fields: [zapId], references: [id])
+  outbox    ZaprunOutbox[]
+}
+
+model ZaprunOutbox{
+  id        String   @id @default(uuid())
+  zaprunId  String
+  zaprun    Zaprun   @relation(fields: [zaprunId], references: [id])
 }
 
