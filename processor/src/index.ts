@@ -8,7 +8,6 @@ const kafka = new Kafka({
     brokers: ["localhost:9092"]
 })
 
-
 async function main() {
     const producer = kafka.producer()
     await producer.connect()
@@ -19,8 +18,7 @@ async function main() {
                 where: {},
                 take:10
             })
-
-            
+             
             producer.send({
                 topic: TOPIC_NAME,
                 messages: pendingZapruns.map((zaprun) => ({
