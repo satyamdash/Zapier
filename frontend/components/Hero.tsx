@@ -8,12 +8,12 @@ export const Hero = () => {
     const router = useRouter();
     return <div>
         <div className="flex justify-center">
-            <div className="text-5xl font-bold font-semibold text-center pt-8 max-w-xl">
+            <div className="text-5xl font-bold text-center pt-8 max-w-xl">
                 Automate as fast as you can type    
             </div>
         </div>
         <div className="flex justify-center pt-2">
-            <div className="text-xl font-bold font-normal text-center pt-8 max-w-2xl">
+            <div className="text-xl font-bold text-center pt-8 max-w-2xl">
                 AI gives you automation superpowers, and Zapier puts them to work. Pairing AI and Zapier helps you turn ideas into workflows and bots that work for you.
             </div>
         </div>
