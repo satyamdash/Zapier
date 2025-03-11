@@ -28,6 +28,13 @@ function useAvailableActionsAndTriggers() {
     }
 }
 
+const Connector = () => (
+    <div className="w-px h-8 bg-gray-400 relative my-2">
+        <div className="absolute -left-1 -top-1 w-2 h-2 bg-gray-400 rounded-full" />
+        <div className="absolute -left-1 -bottom-1 w-2 h-2 bg-gray-400 rounded-full" />
+    </div>
+);
+
 export default function() {
     const router = useRouter();
     const { availableActions, availableTriggers } = useAvailableActionsAndTriggers();
@@ -69,30 +76,48 @@ export default function() {
 
             }}>Publish</PrimaryButton>
         </div>
-        <div className="w-full min-h-screen bg-slate-200 flex flex-col justify-center">
-            <div className="flex justify-center w-full">
-                <ZapCell onClick={() => {
-                    setSelectedModalIndex(1);
-                }} name={selectedTrigger?.name ? selectedTrigger.name : "Trigger"} index={1} />
+        <div className="w-full min-h-screen bg-gradient-to-b from-slate-100 to-slate-200 flex flex-col items-center py-8">
+            {/* Trigger Cell */}
+            <div className="w-full max-w-2xl px-4 flex flex-col items-center">
+                <ZapCell 
+                    onClick={() => setSelectedModalIndex(1)} 
+                    name={selectedTrigger?.name ? selectedTrigger.name : "Select a Trigger"} 
+                    index={1}
+                    className="w-full max-w-xl h-12 bg-white shadow-md rounded-lg hover:shadow-lg transition-all border border-blue-400 cursor-pointer"
+                />
+                {selectedActions.length > 0 && <Connector />}
             </div>
-            <div className="w-full pt-2 pb-2">
-                {selectedActions.map((action, index) => <div className="pt-2 flex justify-center"> <ZapCell onClick={() => {
-                    setSelectedModalIndex(action.index);
-                }} name={action.availableActionName ? action.availableActionName : "Action"} index={action.index} /> </div>)}
+
+            {/* Action Cells */}
+            <div className="w-full max-w-2xl px-4 flex flex-col items-center">
+                {selectedActions.map((action, index) => (
+                    <div key={action.index} className="w-full flex flex-col items-center">
+                        <ZapCell 
+                            onClick={() => setSelectedModalIndex(action.index)}
+                            name={action.availableActionName ? action.availableActionName : "Select an Action"}
+                            index={action.index}
+                            className="w-full max-w-xl h-12 bg-white shadow-md rounded-lg hover:shadow-lg transition-all border border-purple-400 cursor-pointer"
+                        />
+                        {index < selectedActions.length - 1 && <Connector />}
+                    </div>
+                ))}
             </div>
-            <div className="flex justify-center">
-                <div>
-                    <PrimaryButton onClick={() => {
+
+            {/* Add Action Button */}
+            <div className="mt-6">
+                <PrimaryButton 
+                    onClick={() => {
                         setSelectedActions(a => [...a, {
                             index: a.length + 2,
                             availableActionId: "",
                             availableActionName: "",
                             metadata: {}
                         }])
-                    }}><div className="text-2xl">
-                        +
-                    </div></PrimaryButton>
-                </div>
+                    }}
+                    className="rounded-full w-12 h-12 flex items-center justify-center hover:scale-105 transition-transform"
+                >
+                    <div className="text-2xl">+</div>
+                </PrimaryButton>
             </div>
         </div>
         {selectedModalIndex && <Modal availableItems={selectedModalIndex === 1 ? availableTriggers : availableActions} onSelect={(props: null | { name: string; id: string; metadata: any; }) => {
