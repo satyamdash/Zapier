@@ -110,4 +110,38 @@ router.get("/:zapId", middleware_1.authMiddleware, (req, res) => __awaiter(void 
         zap
     });
 }));
+router.delete("/", middleware_1.authMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const zapIds = req.body.ids;
+    const id = req.id;
+    yield db_1.prisma.$transaction((tx) => __awaiter(void 0, void 0, void 0, function* () {
+        // First delete related triggers
+        yield tx.trigger.deleteMany({
+            where: {
+                zapId: {
+                    in: zapIds
+                }
+            }
+        });
+        // Then delete related actions
+        yield tx.action.deleteMany({
+            where: {
+                zapId: {
+                    in: zapIds
+                }
+            }
+        });
+        // Finally delete the zaps
+        yield tx.zap.deleteMany({
+            where: {
+                id: {
+                    in: zapIds
+                },
+                userId: id
+            }
+        });
+    }));
+    return res.json({
+        message: "Zaps deleted successfully"
+    });
+}));
 exports.zapRouter = router;
