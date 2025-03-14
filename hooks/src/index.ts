@@ -11,16 +11,16 @@ app.post("/hooks/catch/:userId/:zapId", async (req, res) => {
   const { userId, zapId } = req.params;
   const { data } = req.body;
   await prisma.$transaction(async (tx) => {
-    const zaprun = await tx.zaprun.create({
+    const zaprun = await tx.zapRun.create({
       data: {
         zapId: zapId,
         metadata: data,
       },
     });
 
-    await tx.zaprunOutbox.create({
+    await tx.zapRunOutbox.create({
       data: {
-        zaprunId: zaprun.id,
+        zapRunId: zaprun.id,
       },
     });
   });
@@ -29,6 +29,6 @@ app.post("/hooks/catch/:userId/:zapId", async (req, res) => {
   res.send("ok");
 });
 
-app.listen(3000, () => {
-  console.log("Server is running on port 3000");
+app.listen(3002, () => {
+  console.log("Server is running on port 3002");
 });

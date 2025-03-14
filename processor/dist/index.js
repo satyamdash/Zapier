@@ -22,17 +22,17 @@ function main() {
         const producer = kafka.producer();
         yield producer.connect();
         while (1) {
-            const pendingZapruns = yield prisma.zaprunOutbox.findMany({
+            const pendingZapruns = yield prisma.zapRunOutbox.findMany({
                 where: {},
                 take: 10
             });
             producer.send({
                 topic: TOPIC_NAME,
                 messages: pendingZapruns.map((zaprun) => ({
-                    value: zaprun.zaprunId
+                    value: zaprun.zapRunId
                 }))
             });
-            yield prisma.zaprunOutbox.deleteMany({
+            yield prisma.zapRunOutbox.deleteMany({
                 where: {
                     id: {
                         in: pendingZapruns.map((zaprun) => zaprun.id)

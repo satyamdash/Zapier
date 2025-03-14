@@ -14,7 +14,7 @@ async function main() {
 
     while(1)
         {
-            const pendingZapruns = await prisma.zaprunOutbox.findMany({
+            const pendingZapruns = await prisma.zapRunOutbox.findMany({
                 where: {},
                 take:10
             })
@@ -22,11 +22,11 @@ async function main() {
             producer.send({
                 topic: TOPIC_NAME,
                 messages: pendingZapruns.map((zaprun) => ({
-                    value: zaprun.zaprunId
+                    value: zaprun.zapRunId
                 }))
             })
             
-            await prisma.zaprunOutbox.deleteMany({
+            await prisma.zapRunOutbox.deleteMany({
                 where: {
                     id: {
                         in: pendingZapruns.map((zaprun) => zaprun.id)
