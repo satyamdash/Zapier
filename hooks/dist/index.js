@@ -19,12 +19,12 @@ const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.post("/hooks/catch/:userId/:zapId", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { userId, zapId } = req.params;
-    const { data } = req.body;
+    const body = req.body;
     yield prisma.$transaction((tx) => __awaiter(void 0, void 0, void 0, function* () {
         const zaprun = yield tx.zapRun.create({
             data: {
                 zapId: zapId,
-                metadata: data,
+                metadata: body,
             },
         });
         yield tx.zapRunOutbox.create({
@@ -33,8 +33,8 @@ app.post("/hooks/catch/:userId/:zapId", (req, res) => __awaiter(void 0, void 0, 
             },
         });
     }));
-    console.log(data);
-    res.send("ok");
+    console.log(body);
+    res.json({ message: "ok" });
 }));
 app.listen(3002, () => {
     console.log("Server is running on port 3002");

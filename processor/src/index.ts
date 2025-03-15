@@ -9,33 +9,35 @@ const kafka = new Kafka({
 })
 
 async function main() {
-    const producer = kafka.producer()
-    await producer.connect()
+    const producer =  kafka.producer();
+    await producer.connect();
 
-    while(1)
-        {
-            const pendingZapruns = await prisma.zapRunOutbox.findMany({
-                where: {},
-                take:10
-            })
-             
-            producer.send({
-                topic: TOPIC_NAME,
-                messages: pendingZapruns.map((zaprun) => ({
-                    value: zaprun.zapRunId
-                }))
-            })
-            
-            await prisma.zapRunOutbox.deleteMany({
-                where: {
-                    id: {
-                        in: pendingZapruns.map((zaprun) => zaprun.id)
-                    }
+    while(1) {
+        const pendingRows = await prisma.zapRunOutbox.findMany({
+            where :{},
+            take: 10
+        })
+        console.log(pendingRows);
+
+        producer.send({
+            topic: TOPIC_NAME,
+            messages: pendingRows.map(r => {
+                return {
+                    value: JSON.stringify({ zapRunId: r.zapRunId, stage: 0 })
                 }
             })
-            
-        }
-}
+        })  
 
+        await prisma.zapRunOutbox.deleteMany({
+            where: {
+                id: {
+                    in: pendingRows.map(x => x.id)
+                }
+            }
+        })
+
+        await new Promise(r => setTimeout(r, 3000));
+    }
+}
 
 main()

@@ -181,8 +181,7 @@ function Modal({ index, onSelect, availableItems = [] }: {
                     </button>
                 </div>
                 <div className="p-4 md:p-5 space-y-4">
-                    {step === 1 && <div className="text-sm text-gray-500 mb-2">Debug: Selected action ID: {selectedAction?.id}</div>}
-                    
+                
                     {step === 1 && selectedAction?.id === "email" && <EmailSelector setMetadata={(metadata) => {
                         onSelect({
                             ...selectedAction,

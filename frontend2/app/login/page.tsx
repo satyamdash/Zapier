@@ -39,13 +39,20 @@ export default function() {
                     }} label={"Password"} type="password" placeholder="Password"></Input>
                     <div className="pt-4">
                         <PrimaryButton onClick={async () => {
-                            const res = await axios.post(`${BACKEND_URL}/api/v1/user/login`, {
-                                email,
-                                password,
-                            });
-                            localStorage.setItem("token", res.data.token);
-                            router.push("/dashboard");
+                            try {
+                                const res = await axios.post(`${BACKEND_URL}/api/v1/user/login`, {
+                                    email,
+                                    password,
+                                });
+
+                                localStorage.setItem("token", res.data.token);
+                                router.push("/dashboard");
+                            } catch (error) {
+                                console.error("Login error:", error);
+                                alert("Invalid email or password");
+                            }
                         }} size="big">Login</PrimaryButton>
+
                     </div>
                 </div>
             </div>

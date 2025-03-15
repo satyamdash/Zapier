@@ -22,23 +22,27 @@ function main() {
         const producer = kafka.producer();
         yield producer.connect();
         while (1) {
-            const pendingZapruns = yield prisma.zapRunOutbox.findMany({
+            const pendingRows = yield prisma.zapRunOutbox.findMany({
                 where: {},
                 take: 10
             });
+            console.log(pendingRows);
             producer.send({
                 topic: TOPIC_NAME,
-                messages: pendingZapruns.map((zaprun) => ({
-                    value: zaprun.zapRunId
-                }))
+                messages: pendingRows.map(r => {
+                    return {
+                        value: JSON.stringify({ zapRunId: r.zapRunId, stage: 0 })
+                    };
+                })
             });
             yield prisma.zapRunOutbox.deleteMany({
                 where: {
                     id: {
-                        in: pendingZapruns.map((zaprun) => zaprun.id)
+                        in: pendingRows.map(x => x.id)
                     }
                 }
             });
+            yield new Promise(r => setTimeout(r, 3000));
         }
     });
 }

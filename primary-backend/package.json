@@ -5,6 +5,9 @@
   "scripts": {
     "dev": "tsc -b && node dist/index.js"
   },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -19,6 +22,7 @@
     "exxpress": "^1.0.0",
     "jsonwebtoken": "^9.0.2",
     "prisma": "^6.4.1",
+    "ts-node": "^10.9.2",
     "zod": "^3.24.2"
   }
 }
